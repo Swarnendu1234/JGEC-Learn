@@ -1,4 +1,28 @@
-const StreakBanner = ({ onAchievementClick }) => {
+const StreakBanner = ({ onAchievementClick, currentStreak = 0, achievementUnlocked = false }) => {
+    const getStreakMessage = () => {
+        if (currentStreak === 0) {
+            return "Start your learning journey today!"
+        } else if (currentStreak === 1) {
+            return "Great start! Keep going to build your streak"
+        } else if (currentStreak < 7) {
+            return `${7 - currentStreak} more ${7 - currentStreak === 1 ? 'day' : 'days'} to earn the "Dedicated Learner" badge`
+        } else if (currentStreak === 7 && achievementUnlocked) {
+            return "Achievement unlocked! You're a Dedicated Learner 🎉"
+        } else {
+            return `${currentStreak - 7} ${currentStreak - 7 === 1 ? 'day' : 'days'} beyond your achievement! Amazing commitment`
+        }
+    }
+
+    const getStreakTitle = () => {
+        if (currentStreak === 0) {
+            return "Ready to learn? 🚀"
+        } else if (currentStreak >= 7) {
+            return "You're unstoppable! 🔥"
+        } else {
+            return "You're on fire! 🔥"
+        }
+    }
+
     return (
         <div className="streak-banner">
             <div className="streak-content">
@@ -16,8 +40,11 @@ const StreakBanner = ({ onAchievementClick }) => {
                     </svg>
                 </div>
                 <div className="streak-text">
-                    <h3>You're on fire! 🔥</h3>
-                    <p>7 day learning streak · Complete one more course this week to earn the "Dedicated Learner" badge</p>
+                    <h3>{getStreakTitle()}</h3>
+                    <p>
+                        {currentStreak > 0 ? `${currentStreak} day learning streak · ` : ''}
+                        {getStreakMessage()}
+                    </p>
                 </div>
             </div>
             <button className="btn-achievement" onClick={onAchievementClick}>

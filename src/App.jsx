@@ -14,6 +14,7 @@ import { useDarkMode } from './hooks/useDarkMode'
 import { useToast } from './hooks/useToast'
 import { useNotifications } from './hooks/useNotifications'
 import { useMessages } from './hooks/useMessages'
+import { useLoginStreak } from './hooks/useLoginStreak'
 import { coursesData } from './data/coursesData'
 
 function App() {
@@ -21,12 +22,25 @@ function App() {
     const { toast, showToast, hideToast } = useToast()
     const notifications = useNotifications()
     const messages = useMessages()
+    const loginStreak = useLoginStreak()
     const [searchQuery, setSearchQuery] = useState('')
     const [activeFilter, setActiveFilter] = useState('all')
     const [sortBy, setSortBy] = useState('Recent')
     const [category, setCategory] = useState('All')
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [showConfetti, setShowConfetti] = useState(false)
+
+    // Check for 7-day streak achievement
+    useEffect(() => {
+        if (loginStreak.currentStreak === 7 && !loginStreak.achievementUnlocked) {
+            // Delay to show after page loads
+            setTimeout(() => {
+                setShowConfetti(true)
+                showToast('🎉 Achievement Unlocked: "Dedicated Learner" - 7 Day Streak!', 'success')
+                notifications.simulateNotification('badge')
+            }, 1500)
+        }
+    }, [loginStreak.currentStreak, loginStreak.achievementUnlocked, showToast, notifications])
 
     // Keyboard shortcuts
     useEffect(() => {
@@ -146,9 +160,17 @@ function App() {
                         showToast={showToast}
                     />
 
-                    <StreakBanner onAchievementClick={handleAchievement} />
+                    <StreakBanner
+                        onAchievementClick={handleAchievement}
+                        currentStreak={loginStreak.currentStreak}
+                        achievementUnlocked={loginStreak.achievementUnlocked}
+                    />
 
-                    <Heatmap showToast={showToast} />
+                    <Heatmap
+                        showToast={showToast}
+                        loginDates={loginStreak.loginDates}
+                        getActivityLevel={loginStreak.getActivityLevel}
+                    />
 
                     <div className="courses-grid">
                         {sortedCourses.map((course) => (

@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react'
 
-const Heatmap = ({ showToast }) => {
+const Heatmap = ({ showToast, loginDates = [], getActivityLevel }) => {
     const [heatmapData, setHeatmapData] = useState([])
 
     useEffect(() => {
-        // Generate 30 days of activity data
+        // Generate 30 days of activity data based on real login dates
         const data = []
         for (let i = 0; i < 30; i++) {
             const date = new Date()
             date.setDate(date.getDate() - (29 - i))
-            const level = Math.floor(Math.random() * 5)
+            const dateStr = date.toISOString().split('T')[0]
+
+            // Use real activity level if getActivityLevel is provided, otherwise use 0
+            const level = getActivityLevel ? getActivityLevel(dateStr) : 0
+
             data.push({
                 date: date.toLocaleDateString(),
+                dateStr,
                 level,
-                activity: getActivityText(level)
+                activity: getActivityText(level),
+                hasLogin: loginDates.includes(dateStr)
             })
         }
         setHeatmapData(data)
-    }, [])
+    }, [loginDates, getActivityLevel])
 
     const getActivityText = (level) => {
         const activities = ['No activity', 'Light activity', 'Moderate activity', 'High activity', 'Very high activity']
@@ -25,7 +31,11 @@ const Heatmap = ({ showToast }) => {
     }
 
     const handleDayClick = (day) => {
-        showToast(`Activity: ${day.activity}`, 'info')
+        if (day.hasLogin) {
+            showToast(`✅ Logged in on ${day.date}`, 'success')
+        } else {
+            showToast(`${day.date}: ${day.activity}`, 'info')
+        }
     }
 
     return (

@@ -1,0 +1,217 @@
+import { useState, useEffect } from 'react'
+import Sidebar from './components/Sidebar'
+import Header from './components/Header'
+import PageHeader from './components/PageHeader'
+import FilterChips from './components/FilterChips'
+import StreakBanner from './components/StreakBanner'
+import Heatmap from './components/Heatmap'
+import CourseCard from './components/CourseCard'
+import RightSidebar from './components/RightSidebar'
+import DarkModeToggle from './components/DarkModeToggle'
+import ConfettiCanvas from './components/ConfettiCanvas'
+import Toast from './components/Toast'
+import { useDarkMode } from './hooks/useDarkMode'
+import { useToast } from './hooks/useToast'
+import { useNotifications } from './hooks/useNotifications'
+import { useMessages } from './hooks/useMessages'
+import { coursesData } from './data/coursesData'
+
+function App() {
+    const [isDarkMode, toggleDarkMode] = useDarkMode()
+    const { toast, showToast, hideToast } = useToast()
+    const notifications = useNotifications()
+    const messages = useMessages()
+    const [searchQuery, setSearchQuery] = useState('')
+    const [activeFilter, setActiveFilter] = useState('all')
+    const [sortBy, setSortBy] = useState('Recent')
+    const [category, setCategory] = useState('All')
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+    const [showConfetti, setShowConfetti] = useState(false)
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Ctrl/Cmd + K: Focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault()
+                document.querySelector('.search-input')?.focus()
+                showToast('Search activated', 'info')
+            }
+
+            // Ctrl/Cmd + D: Toggle dark mode
+            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                e.preventDefault()
+                toggleDarkMode()
+            }
+
+            // Escape: Clear search
+            if (e.key === 'Escape') {
+                if (searchQuery) {
+                    setSearchQuery('')
+                }
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [searchQuery, toggleDarkMode, showToast])
+
+    // Filter courses
+    const filteredCourses = coursesData.filter(course => {
+        // Search filter
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase()
+            const matchesTitle = course.title.toLowerCase().includes(query)
+            const matchesBadge = course.badge.toLowerCase().includes(query)
+            const matchesTags = course.tags.some(tag => tag.toLowerCase().includes(query))
+            if (!matchesTitle && !matchesBadge && !matchesTags) return false
+        }
+
+        // Status filter
+        if (activeFilter !== 'all' && course.status !== activeFilter) {
+            return false
+        }
+
+        return true
+    })
+
+    // Sort courses
+    const sortedCourses = [...filteredCourses].sort((a, b) => {
+        switch (sortBy) {
+            case 'Progress':
+                return b.progress - a.progress
+            case 'Title':
+                return a.title.localeCompare(b.title)
+            default:
+                return 0
+        }
+    })
+
+    const handleContinueCourse = (courseTitle) => {
+        showToast(`Launching ${courseTitle}...`, 'info')
+        setTimeout(() => {
+            showToast('Course loaded! 🚀', 'success')
+        }, 1500)
+    }
+
+    const handleViewCertificate = (courseTitle) => {
+        showToast(`Viewing certificate for ${courseTitle} 🎓`, 'success')
+        setShowConfetti(true)
+    }
+
+    const handleAchievement = () => {
+        setShowConfetti(true)
+        showToast('🎉 Achievements unlocked!', 'success')
+    }
+
+    // Listen for test notification events
+    useEffect(() => {
+        const handleTestNotification = (e) => {
+            notifications.simulateNotification(e.detail)
+            showToast('New notification received!', 'info')
+        }
+
+        window.addEventListener('testNotification', handleTestNotification)
+        return () => window.removeEventListener('testNotification', handleTestNotification)
+    }, [notifications, showToast])
+
+    return (
+        <>
+            <ConfettiCanvas show={showConfetti} onComplete={() => setShowConfetti(false)} />
+            <DarkModeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} showToast={showToast} />
+
+            <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+            />
+
+            <main className="main-content">
+                <Header
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    coursesData={coursesData}
+                    notifications={notifications}
+                    messages={messages}
+                />                <div className="page-content">
+                    <PageHeader />
+
+                    <FilterChips
+                        activeFilter={activeFilter}
+                        setActiveFilter={setActiveFilter}
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                        category={category}
+                        setCategory={setCategory}
+                        showToast={showToast}
+                    />
+
+                    <StreakBanner onAchievementClick={handleAchievement} />
+
+                    <Heatmap showToast={showToast} />
+
+                    <div className="courses-grid">
+                        {sortedCourses.map((course) => (
+                            <CourseCard
+                                key={course.id}
+                                course={course}
+                                onContinue={handleContinueCourse}
+                                onViewCertificate={handleViewCertificate}
+                            />
+                        ))}
+                    </div>
+
+                    {sortedCourses.length === 0 && (
+                        <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
+                                No courses found matching your search
+                            </p>
+                        </div>
+                    )}
+
+                    {/* SVG Gradients for Progress Rings */}
+                    <svg width="0" height="0">
+                        <defs>
+                            <linearGradient id="progressGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#6C7383" />
+                                <stop offset="100%" stopColor="#4C57FF" />
+                            </linearGradient>
+                            <linearGradient id="progressGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#4C57FF" />
+                                <stop offset="100%" stopColor="#00D4FF" />
+                            </linearGradient>
+                            <linearGradient id="progressGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#1A3D7C" />
+                                <stop offset="100%" stopColor="#4C57FF" />
+                            </linearGradient>
+                            <linearGradient id="progressGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#10B981" />
+                                <stop offset="100%" stopColor="#34D399" />
+                            </linearGradient>
+                            <linearGradient id="progressGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#4C57FF" />
+                                <stop offset="100%" stopColor="#1A3D7C" />
+                            </linearGradient>
+                            <linearGradient id="progressGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#00D4FF" />
+                                <stop offset="100%" stopColor="#4C57FF" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </main>
+
+            <RightSidebar showToast={showToast} />
+
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={hideToast}
+                />
+            )}
+        </>
+    )
+}
+
+export default App

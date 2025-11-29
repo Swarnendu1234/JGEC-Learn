@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>My Courses - JGEC Learn | AI-Powered Learning Platform</title>
+    <meta name="description"
+        content="Next-generation learning platform with AI-powered recommendations, progress tracking, and premium educational content.">
+    <meta name="theme-color" content="#1A3D7C">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="courses-premium-styles.css">
+</head>
+
+<body class="light-mode">
+    <!-- Confetti Canvas for Celebrations -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle Dark Mode">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+    </button>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <svg class="logo-icon" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="18" fill="url(#logoGrad)" opacity="0.2" />
+                <circle cx="20" cy="20" r="18" stroke="url(#logoGrad)" stroke-width="2" fill="none" />
+                <path d="M20 8 L20 20 L30 20" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="20" cy="20" r="2.5" fill="url(#logoGrad)" />
+                <defs>
+                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1A3D7C" />
+                        <stop offset="100%" stop-color="#4C57FF" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>JGEC Learn</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+                <span>My Courses</span>
+                <span class="badge">8</span>
+            </a>
+
+            <a href="neurallearn.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="subjects.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                <span>Subjects</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                </svg>
+                <span>Programs</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <path d="M9 15l2 2 4-4" />
+                </svg>
+                <span>Certificates</span>
+                <span class="badge success">3</span>
+            </a>
+
+            <div class="nav-divider"></div>
+
+            <a href="#" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span>Profile</span>
+            </a>
+
+            <a href="#" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24" />
+                </svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-user">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" alt="User">
+            <div class="user-info">
+                <div class="user-name">Nirman Kumar</div>
+                <div class="user-role">Premium Student</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Floating Search Bar with Glassmorphism -->
+        <div class="floating-search">
+            <button class="menu-btn" id="menuBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input type="text" placeholder="Search courses, subjects, or instructors..." class="search-input">
+                <kbd class="search-kbd">Ctrl+K</kbd>
+            </div>
+
+            <div class="header-actions">
+                <button class="action-btn" id="notifBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    <span class="notif-badge">5</span>
+                </button>
+
+                <button class="action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                </button>
+
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" alt="Profile" class="profile-avatar">
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-text">
+                    <h1>My Courses</h1>
+                    <p>Continue your learning journey · 8 courses in progress</p>
+                </div>
+
+                <div class="header-buttons">
+                    <button class="btn-outline" id="refineBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                        </svg>
+                        <span>Refine</span>
+                    </button>
+
+                    <button class="btn-outline">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        <span>Export Progress</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Smart Filter Chips -->
+            <div class="filter-chips">
+                <button class="chip active" data-filter="all">All Courses</button>
+                <button class="chip" data-filter="progress">In Progress</button>
+                <button class="chip" data-filter="completed">Completed</button>
+                <button class="chip" data-filter="not-started">Not Started</button>
+                <button class="chip" data-filter="expired">Expired</button>
+
+                <div class="filter-divider"></div>
+
+                <select class="filter-select">
+                    <option>Sort: Recent</option>
+                    <option>Sort: Progress</option>
+                    <option>Sort: Title</option>
+                    <option>Sort: Deadline</option>
+                </select>
+
+                <select class="filter-select">
+                    <option>Category: All</option>
+                    <option>Computer Science</option>
+                    <option>Data Science</option>
+                    <option>Mathematics</option>
+                    <option>Business</option>
+                </select>
+            </div>
+
+            <!-- Weekly Streak Banner (Redesigned with Gradient) -->
+            <div class="streak-banner">
+                <div class="streak-content">
+                    <div class="flame-container">
+                        <svg class="flame-icon animated-flame" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2c-1.5 4-3 6-3 10a3 3 0 0 0 6 0c0-4-1.5-6-3-10z" fill="url(#flameGrad)"
+                                opacity="0.8" />
+                            <path d="M12 8c-1 2.5-2 4-2 6a2 2 0 0 0 4 0c0-2-1-3.5-2-6z" fill="url(#flameGrad)" />
+                            <defs>
+                                <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#FF6B35" />
+                                    <stop offset="50%" stop-color="#FFB700" />
+                                    <stop offset="100%" stop-color="#FFE600" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="streak-text">
+                        <h3>You're on fire! 🔥</h3>
+                        <p>7 day learning streak · Complete one more course this week to earn the "Dedicated Learner"
+                            badge</p>
+                    </div>
+                </div>
+                <button class="btn-achievement" id="achievementBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <span>View Achievements</span>
+                </button>
+            </div>
+
+            <!-- Progress Heatmap -->
+            <div class="heatmap-section">
+                <div class="heatmap-header">
+                    <h3>Learning Activity</h3>
+                    <span class="heatmap-subtitle">Last 30 days</span>
+                </div>
+                <div class="heatmap-grid" id="heatmapGrid">
+                    <!-- Generated by JavaScript -->
+                </div>
+                <div class="heatmap-legend">
+                    <span>Less</span>
+                    <div class="legend-box" data-level="0"></div>
+                    <div class="legend-box" data-level="1"></div>
+                    <div class="legend-box" data-level="2"></div>
+                    <div class="legend-box" data-level="3"></div>
+                    <div class="legend-box" data-level="4"></div>
+                    <span>More</span>
+                </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div class="courses-grid">
+                <!-- Course Card 1 - MIT (Expired) -->
+                <div class="course-card" data-status="expired">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?w=500&h=300&fit=crop"
+                            alt="Probability">
+                        <div class="card-badge mit">MIT</div>
+                        <div class="status-label expired">Access Expired</div>
+                        <div class="card-overlay">
+                            <button class="quick-action">View Details</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Probability - The Science of Uncertainty and Data</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                6.431x
+                            </span>
+                            <span class="meta-divider">·</span>
+                            <span class="meta-item">Expired: June 19, 2024</span>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-ring" data-progress="75">
+                                <svg width="60" height="60">
+                                    <circle cx="30" cy="30" r="26" stroke="#F5F6FA" stroke-width="4" fill="none" />
+                                    <circle class="progress-circle" cx="30" cy="30" r="26" stroke="url(#progressGrad1)"
+                                        stroke-width="4" fill="none" stroke-linecap="round" />
+                                </svg>
+                                <span class="progress-text">75%</span>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-label">Course Progress</div>
+                                <div class="progress-stats">15/20 modules completed</div>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Statistics</span>
+                            <span class="tag">Data Science</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                                Upgrade Access
+                            </button>
+                            <button class="btn-primary">View Course</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 2 - Harvard (Active) -->
+                <div class="course-card active" data-status="progress">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=500&h=300&fit=crop"
+                            alt="Python">
+                        <div class="card-badge harvard">Harvard</div>
+                        <div class="status-label active">In Progress</div>
+                        <div class="card-overlay">
+                            <button class="quick-action">Continue Learning</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">CS50's Introduction to Programming with Python</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                </svg>
+                                12,450 enrolled
+                            </span>
+                            <span class="meta-divider">·</span>
+                            <span class="meta-item">10 weeks</span>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-ring active" data-progress="42">
+                                <svg width="60" height="60">
+                                    <circle cx="30" cy="30" r="26" stroke="#F5F6FA" stroke-width="4" fill="none" />
+                                    <circle class="progress-circle" cx="30" cy="30" r="26" stroke="url(#progressGrad2)"
+                                        stroke-width="4" fill="none" stroke-linecap="round" />
+                                </svg>
+                                <span class="progress-text">42%</span>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-label">Course Progress</div>
+                                <div class="progress-stats">8/19 modules completed</div>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Programming</span>
+                            <span class="tag">Python</span>
+                            <span class="tag hot">Trending</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary full-width">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3" />
+                                </svg>
+                                Continue Learning
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 3 - IBM -->
+                <div class="course-card" data-status="progress">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop"
+                            alt="Data Visualization">
+                        <div class="card-badge ibm">IBM</div>
+                        <div class="status-label active">In Progress</div>
+                        <div class="card-overlay">
+                            <button class="quick-action">Continue Learning</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Data Visualization and Building Dashboards</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                6 weeks
+                            </span>
+                            <span class="meta-divider">·</span>
+                            <span class="meta-item">Intermediate</span>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-ring" data-progress="18">
+                                <svg width="60" height="60">
+                                    <circle cx="30" cy="30" r="26" stroke="#F5F6FA" stroke-width="4" fill="none" />
+                                    <circle class="progress-circle" cx="30" cy="30" r="26" stroke="url(#progressGrad3)"
+                                        stroke-width="4" fill="none" stroke-linecap="round" />
+                                </svg>
+                                <span class="progress-text">18%</span>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-label">Course Progress</div>
+                                <div class="progress-stats">3/17 modules completed</div>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Data Viz</span>
+                            <span class="tag">Excel</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary full-width">Continue Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 4 - Stanford (Completed) -->
+                <div class="course-card completed" data-status="completed">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=500&h=300&fit=crop"
+                            alt="ML">
+                        <div class="card-badge stanford">Stanford</div>
+                        <div class="status-label completed">Completed</div>
+                        <div class="certificate-badge">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="card-overlay">
+                            <button class="quick-action">View Certificate</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Machine Learning Specialization</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Certificate earned
+                            </span>
+                            <span class="meta-divider">·</span>
+                            <span class="meta-item">3 months</span>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-ring completed" data-progress="100">
+                                <svg width="60" height="60">
+                                    <circle cx="30" cy="30" r="26" stroke="#F5F6FA" stroke-width="4" fill="none" />
+                                    <circle class="progress-circle" cx="30" cy="30" r="26" stroke="url(#progressGrad4)"
+                                        stroke-width="4" fill="none" stroke-linecap="round" />
+                                </svg>
+                                <span class="progress-text">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-label">Course Completed</div>
+                                <div class="progress-stats">All modules finished</div>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">ML</span>
+                            <span class="tag">AI</span>
+                            <span class="tag certified">Certified</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                                View Certificate
+                            </button>
+                            <button class="btn-primary">Review Course</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 5 - Google -->
+                <div class="course-card" data-status="progress">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=300&fit=crop"
+                            alt="Data Analytics">
+                        <div class="card-badge google">Google</div>
+                        <div class="status-label active">In Progress</div>
+                        <div class="card-overlay">
+                            <button class="quick-action">Continue Learning</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Google Data Analytics Professional Certificate</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                                </svg>
+                                8 courses
+                            </span>
+                            <span class="meta-divider">·</span>
+                            <span class="meta-item">6 months</span>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-ring" data-progress="65">
+                                <svg width="60" height="60">
+                                    <circle cx="30" cy="30" r="26" stroke="#F5F6FA" stroke-width="4" fill="none" />
+                                    <circle class="progress-circle" cx="30" cy="30" r="26" stroke="url(#progressGrad5)"
+                                        stroke-width="4" fill="none" stroke-linecap="round" />
+                                </svg>
+                                <span class="progress-text">65%</span>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-label">Course Progress</div>
+                                <div class="progress-stats">13/20 modules completed</div>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Analytics</span>
+                            <span class="tag">Data</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary full-width">Continue Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Card 6 - Yale -->
+                <div class="course-card" data-status="progress">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&h=300&fit=crop"
+                            alt="Finance">
+                        <div class="card-badge yale">Yale</div>
+                        <div class="status-label active">In Progress</div>
+                        <div class="card-overlay">
+                            <button class="quick-action">Continue Learning</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Financial Markets</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
+                                Prof. Robert Shiller
+                            </span>
+                            <span class="meta-divider">·</span>
+                            <span class="meta-item">7 weeks</span>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-ring" data-progress="30">
+                                <svg width="60" height="60">
+                                    <circle cx="30" cy="30" r="26" stroke="#F5F6FA" stroke-width="4" fill="none" />
+                                    <circle class="progress-circle" cx="30" cy="30" r="26" stroke="url(#progressGrad6)"
+                                        stroke-width="4" fill="none" stroke-linecap="round" />
+                                </svg>
+                                <span class="progress-text">30%</span>
+                            </div>
+                            <div class="progress-details">
+                                <div class="progress-label">Course Progress</div>
+                                <div class="progress-stats">6/20 modules completed</div>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Finance</span>
+                            <span class="tag">Business</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary full-width">Continue Learning</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SVG Gradients for Progress Rings -->
+            <svg width="0" height="0">
+                <defs>
+                    <linearGradient id="progressGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6C7383" />
+                        <stop offset="100%" stop-color="#4C57FF" />
+                    </linearGradient>
+                    <linearGradient id="progressGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#4C57FF" />
+                        <stop offset="100%" stop-color="#00D4FF" />
+                    </linearGradient>
+                    <linearGradient id="progressGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#1A3D7C" />
+                        <stop offset="100%" stop-color="#4C57FF" />
+                    </linearGradient>
+                    <linearGradient id="progressGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#10B981" />
+                        <stop offset="100%" stop-color="#34D399" />
+                    </linearGradient>
+                    <linearGradient id="progressGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#4C57FF" />
+                        <stop offset="100%" stop-color="#1A3D7C" />
+                    </linearGradient>
+                    <linearGradient id="progressGrad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00D4FF" />
+                        <stop offset="100%" stop-color="#4C57FF" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </main>
+
+    <!-- Right Sidebar - AI Assistant & Recommendations -->
+    <aside class="right-sidebar">
+        <!-- AI Study Assistant Widget -->
+        <div class="ai-assistant-widget">
+            <div class="ai-header">
+                <div class="ai-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                    <span class="ai-pulse"></span>
+                </div>
+                <div class="ai-info">
+                    <h4>AI Study Assistant</h4>
+                    <p>Smart recommendations for you</p>
+                </div>
+            </div>
+
+            <div class="ai-suggestions">
+                <div class="ai-suggestion">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                    <div>
+                        <h5>Continue Python Course</h5>
+                        <p>You're 42% done. Next: Functions & Modules</p>
+                    </div>
+                </div>
+
+                <div class="ai-suggestion">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <div>
+                        <h5>Boost Your Streak</h5>
+                        <p>Study for 30 min today to maintain your 7-day streak</p>
+                    </div>
+                </div>
+
+                <div class="ai-suggestion">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <div>
+                        <h5>Complete IBM Course</h5>
+                        <p>Only 14 modules left. Est. completion: 2 weeks</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="ai-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                <span>Chat with AI</span>
+            </button>
+        </div>
+
+        <!-- Smart Recommendations -->
+        <div class="recommendations">
+            <div class="recommendations-header">
+                <h3>Recommendations for you</h3>
+                <button class="see-all">See all</button>
+            </div>
+
+            <div class="recommendation-card">
+                <div class="rec-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/200px-Harvard_University_logo.svg.png"
+                        alt="Harvard">
+                </div>
+                <h4>CS50's Introduction to Artificial Intelligence</h4>
+                <p>Harvard University · 7 weeks</p>
+                <div class="rec-stats">
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        4.8
+                    </span>
+                    <span>25K+ enrolled</span>
+                </div>
+                <button class="enroll-btn">Enroll Now</button>
+            </div>
+
+            <div class="recommendation-card">
+                <div class="rec-image">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/200px-Harvard_University_logo.svg.png"
+                        alt="Harvard">
+                </div>
+                <h4>CS50's Introduction to Computer Science</h4>
+                <p>Harvard University · 12 weeks</p>
+                <div class="rec-stats">
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        4.9
+                    </span>
+                    <span>50K+ enrolled</span>
+                </div>
+                <button class="enroll-btn">Enroll Now</button>
+            </div>
+
+            <div class="recommendation-card">
+                <div class="rec-image ibm-logo">
+                    <span>IBM</span>
+                </div>
+                <h4>IBM Data Science Professional Certificate</h4>
+                <p>IBM · 3-6 months</p>
+                <div class="rec-stats">
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        4.7
+                    </span>
+                    <span>35K+ enrolled</span>
+                </div>
+                <button class="enroll-btn">Enroll Now</button>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <h3>Your Progress</h3>
+            <div class="stat-row">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Courses Completed</div>
+                </div>
+            </div>
+
+            <div class="stat-row">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Certificates Earned</div>
+                </div>
+            </div>
+
+            <div class="stat-row">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value">142h</div>
+                    <div class="stat-label">Total Study Time</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <script src="courses-premium-script.js"></script>
+</body>
+
+</html>

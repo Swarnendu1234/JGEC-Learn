@@ -149,9 +149,7 @@ body {
     color: var(--text-primary);
 }
 
-/* ============================================
-   CONFETTI CANVAS
-   ============================================ */
+
 
 #confettiCanvas {
     position: fixed;
@@ -162,10 +160,6 @@ body {
     pointer-events: none;
     z-index: 10000;
 }
-
-/* ============================================
-   DARK MODE TOGGLE
-   ============================================ */
 
 .dark-mode-toggle {
     position: fixed;

@@ -1,0 +1,39 @@
+/* Admin Button */
+.admin-button {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(220, 38, 38, 0.4);
+}
+
+.admin-button:active {
+  transform: translateY(0) scale(1);
+}
+
+@media (max-width: 768px) {
+  .admin-button {
+    bottom: 16px;
+    left: 16px;
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
+import CircularProgress from './CircularProgress'
 
-const CourseCard = ({ course, onContinue, onViewCertificate }) => {
+const CourseCard = ({ course, onContinue, onViewCertificate, onCardClick }) => {
     const progressRef = useRef(null)
 
     useEffect(() => {
@@ -38,7 +39,11 @@ const CourseCard = ({ course, onContinue, onViewCertificate }) => {
     }
 
     return (
-        <div className={`course-card ${course.isActive ? 'active' : ''} ${course.status === 'completed' ? 'completed' : ''}`} data-status={course.status}>
+        <div
+            className={`course-card ${course.isActive ? 'active' : ''} ${course.status === 'completed' ? 'completed' : ''}`}
+            data-status={course.status}
+            onClick={() => onCardClick && onCardClick(course)}
+        >
             <div className="card-image">
                 <img src={course.image} alt={course.title} />
                 <div className={`card-badge ${course.badgeColor}`}>{course.badge}</div>
@@ -65,75 +70,47 @@ const CourseCard = ({ course, onContinue, onViewCertificate }) => {
                 <h3 className="card-title">{course.title}</h3>
 
                 <div className="card-meta">
-                    {course.courseCode && (
+                    {course.enrolled && (
+                        <>
+                            <span className="meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                {course.enrolled}
+                            </span>
+                            <span className="meta-divider">·</span>
+                        </>
+                    )}
+                    {course.duration && (
                         <>
                             <span className="meta-item">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <circle cx="12" cy="12" r="10" />
                                     <polyline points="12 6 12 12 16 14" />
                                 </svg>
-                                {course.courseCode}
+                                {course.duration}
                             </span>
+                        </>
+                    )}
+                    {course.rating && (
+                        <>
                             <span className="meta-divider">·</span>
-                        </>
-                    )}
-                    {course.expiryDate && <span className="meta-item">Expired: {course.expiryDate}</span>}
-                    {course.enrolled && <span className="meta-item">{course.enrolled}</span>}
-                    {course.instructor && <span className="meta-item">{course.instructor}</span>}
-                    {course.courses && <span className="meta-item">{course.courses}</span>}
-                    {course.duration && (
-                        <>
-                            {(course.enrolled || course.instructor || course.courses) && <span className="meta-divider">·</span>}
-                            <span className="meta-item">{course.duration}</span>
-                        </>
-                    )}
-                    {course.level && <span className="meta-item">{course.level}</span>}
-                    {course.certificateEarned && (
-                        <>
-                            <span className="meta-item">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12" />
+                            <span className="meta-item rating">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                 </svg>
-                                Certificate earned
+                                {course.rating}
                             </span>
-                            <span className="meta-divider">·</span>
-                            <span className="meta-item">{course.duration}</span>
                         </>
                     )}
                 </div>
 
                 <div className="progress-section">
-                    <div
-                        ref={progressRef}
-                        className={`progress-ring ${course.isActive ? 'active' : ''} ${course.status === 'completed' ? 'completed' : ''}`}
-                        data-progress={course.progress}
-                    >
-                        <svg width="60" height="60">
-                            <circle cx="30" cy="30" r="26" stroke="var(--gray-100)" strokeWidth="4" fill="none" />
-                            <circle
-                                className="progress-circle"
-                                cx="30" cy="30"
-                                r="26"
-                                stroke={`url(#${course.progressGradient})`}
-                                strokeWidth="4"
-                                fill="none"
-                                strokeLinecap="round"
-                                style={{
-                                    strokeDasharray: 163.36,
-                                    strokeDashoffset: 163.36,
-                                    transition: 'stroke-dashoffset 1s ease-out'
-                                }}
-                            />
-                        </svg>
-                        <span className="progress-text">
-                            {course.status === 'completed' ? (
-                                <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            ) : (
-                                `${course.progress}%`
-                            )}
-                        </span>
+                    <div className="progress-ring-wrapper">
+                        <CircularProgress progress={course.progress} size={60} strokeWidth={4} />
                     </div>
                     <div className="progress-details">
                         <div className="progress-label">

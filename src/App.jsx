@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { fetchCourses } from './services/api'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import PageHeader from './components/PageHeader'
@@ -6,10 +7,12 @@ import FilterChips from './components/FilterChips'
 import StreakBanner from './components/StreakBanner'
 import Heatmap from './components/Heatmap'
 import CourseCard from './components/CourseCard'
+import CourseDetailsPage from './components/CourseDetailsPage'
 import RightSidebar from './components/RightSidebar'
 import DarkModeToggle from './components/DarkModeToggle'
 import ConfettiCanvas from './components/ConfettiCanvas'
 import Toast from './components/Toast'
+import AIChatbot from './components/AIChatbot'
 import { useDarkMode } from './hooks/useDarkMode'
 import { useToast } from './hooks/useToast'
 import { useNotifications } from './hooks/useNotifications'
@@ -29,6 +32,28 @@ function App() {
     const [category, setCategory] = useState('All')
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [showConfetti, setShowConfetti] = useState(false)
+    const [selectedCourse, setSelectedCourse] = useState(null)
+    const [isChatbotOpen, setIsChatbotOpen] = useState(false)
+    const [courses, setCourses] = useState([])
+
+    // Load courses from MongoDB
+    useEffect(() => {
+        const loadCourses = async () => {
+            try {
+                const data = await fetchCourses();
+                setCourses(data && Array.isArray(data) ? data : coursesData);
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                setCourses(coursesData);
+            }
+        };
+        loadCourses();
+    }, []);
+
+    // Handle course updates from AdminPanel
+    const handleUpdateCourses = (updatedCourses) => {
+        setCourses(updatedCourses);
+    };
 
     // Check for 7-day streak achievement
     useEffect(() => {
@@ -71,7 +96,7 @@ function App() {
     }, [searchQuery, toggleDarkMode, showToast])
 
     // Filter courses
-    const filteredCourses = coursesData.filter(course => {
+    const filteredCourses = courses.filter(course => {
         // Search filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase()
@@ -144,7 +169,7 @@ function App() {
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    coursesData={coursesData}
+                    coursesData={courses}
                     notifications={notifications}
                     messages={messages}
                 />                <div className="page-content">
@@ -179,6 +204,7 @@ function App() {
                                 course={course}
                                 onContinue={handleContinueCourse}
                                 onViewCertificate={handleViewCertificate}
+                                onCardClick={setSelectedCourse}
                             />
                         ))}
                     </div>
@@ -225,6 +251,14 @@ function App() {
 
             <RightSidebar showToast={showToast} />
 
+            {selectedCourse && (
+                <CourseDetailsPage
+                    course={selectedCourse}
+                    onClose={() => setSelectedCourse(null)}
+                    showToast={showToast}
+                />
+            )}
+
             {toast && (
                 <Toast
                     message={toast.message}
@@ -232,6 +266,21 @@ function App() {
                     onClose={hideToast}
                 />
             )}
+
+            {isChatbotOpen && (
+                <AIChatbot 
+                    onClose={() => setIsChatbotOpen(false)} 
+                />
+            )}
+
+            {/* Chat with AI Button */}
+            <button 
+                className="chat-ai-button"
+                onClick={() => setIsChatbotOpen(true)}
+                title="Chat with AI"
+            >
+                💬 Chat with AI
+            </button>
         </>
     )
 }

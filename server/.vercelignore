@@ -1,0 +1,9 @@
+node_modules
+.env
+*.log
+.DS_Store
+courses.json
+server.log
+test-api.js
+test-server.js
+seedDatabase.js

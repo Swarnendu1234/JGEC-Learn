@@ -1,6 +1,4 @@
-// Use relative URLs to leverage Vite's proxy in development
-// In production, this will use the same domain as the frontend
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 // Helper function to handle API errors
 const handleApiError = (error, endpoint) => {

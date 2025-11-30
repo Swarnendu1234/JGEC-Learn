@@ -4,8 +4,9 @@ services:
     env: node
     region: singapore
     plan: free
-    buildCommand: cd server && npm install
-    startCommand: cd server && node server.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
       - key: MONGODB_URI
         sync: false
@@ -19,14 +20,3 @@ services:
         sync: false
       - key: NODE_ENV
         value: production
-
-  - type: web
-    name: jgec-learn-frontend
-    env: static
-    region: singapore
-    plan: free
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    envVars:
-      - key: VITE_API_URL
-        sync: false

@@ -1,44 +1,30 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { connectDB } from '../db.js';
 import { Course } from '../models/Course.js';
 import { verifyToken } from '../middleware/auth.js';
-import courseDetailsRouter from '../routes/courseDetails.js';
 import authRouter from '../routes/auth.js';
-
-dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://jgec-learn2025.vercel.app',
-  process.env.FRONTEND_URL
-].filter(Boolean);
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, true);
-    }
-  },
+app.use(cors({
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200
-};
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 let isConnected = false;
 const connectToDatabase = async () => {
   if (isConnected) return;
-  await connectDB();
-  isConnected = true;
+  try {
+    await connectDB();
+    isConnected = true;
+  } catch (error) {
+    console.error('DB connection error:', error);
+  }
 };
 
 app.get('/api/health', (req, res) => {
@@ -49,7 +35,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use('/api', courseDetailsRouter);
 app.use('/api/auth', authRouter);
 
 app.get('/api/courses', verifyToken, async (req, res) => {

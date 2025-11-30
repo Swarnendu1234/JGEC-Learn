@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JGEC Learn – Authentication</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f9fbff 0%, #f4f6ff 40%, #f7f7ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 18px;
+      padding: 48px 32px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 13px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2563eb 0%, #6366f1 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background: #fafbfc;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 3px #e0ecff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .toggle-link {
+      color: #2563eb;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-link:hover {
+      color: #1d4ed8;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert.error {
+      background: #fef2f2;
+      border: 1px solid #fee2e2;
+      color: #991b1b;
+    }
+
+    .alert.success {
+      background: #ecfdf5;
+      border: 1px solid #d1fae5;
+      color: #047857;
+    }
+
+    .otp-inputs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .otp-input {
+      width: 50px !important;
+      height: 50px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+      background: #fafbfc;
+      padding: 0;
+    }
+
+    .otp-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px #e0ecff;
+    }
+
+    .otp-timer {
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 15px;
+    }
+
+    .otp-timer.warning {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    .resend-btn {
+      background: transparent !important;
+      color: #2563eb;
+      border: 1.5px solid #2563eb;
+    }
+
+    .resend-btn:hover {
+      background: #e0ecff !important;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .form-card {
+        padding: 32px 20px;
+      }
+      .form-title {
+        font-size: 20px;
+      }
+      .otp-input {
+        width: 40px !important;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-card">
+      <div class="logo-section">
+        <div class="logo">JGEC Learn</div>
+        <div class="tagline">Master Premium Courses</div>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div class="form-section active" id="signup-section">
+        <h2 class="form-title">Create Account</h2>
+        <p class="form-subtitle">Join our learning community</p>
+
+        <div class="alert error" id="signup-error"></div>
+        <div class="alert success" id="signup-success"></div>
+
+        <form id="signup-form">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="signup-name" placeholder="John Doe" required />
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="signup-email" placeholder="john@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="signup-username" placeholder="johndoe" required />
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signup-password" placeholder="••••••••" required />
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="signup-confirm-password" placeholder="••••••••" required />
+          </div>
+
+          <button type="submit" id="signup-btn">Create Account</button>
+        </form>
+
+        <div class="toggle-text">
+          Already have an account? <span class="toggle-link" onclick="switchForm('login')">Sign In</span>
+        </div>
+      </div>
+
+      <!-- OTP VERIFICATION FORM -->
+      <div class="form-section" id="otp-section">
+        <h2 class="form-title">Verify Email</h2>
+        <p class="form-subtitle" id="otp-email-display">Check your email for code</p>
+
+        <div class="alert error" id="otp-error"></div>
+        <div class="alert success" id="otp-success"></div>
+
+        <div class="otp-timer" id="otp-timer">Expires in: <span id="timer">600</span>s</div>
+
+        <form id="otp-form">
+          <div class="otp-inputs" id="otp-inputs">
+            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" />
+          </div>
+
+          <button type="submit" id="verify-btn">Verify OTP</button>
+        </form>
+
+        <button type="button" class="resend-btn" id="resend-btn" onclick="resendOTP()">Resend Code</button>
+
+        <div class="toggle-text">
+          <span class="toggle-link" onclick="switchForm('signup')">← Back</span>
+        </div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div class="form-section" id="login-section">
+        <h2 class="form-title">Sign In</h2>
+        <p class="form-subtitle">Welcome back!</p>
+
+        <div class="alert error" id="login-error"></div>
+        <div class="alert success" id="login-success"></div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label>Email or Username</label>
+            <input type="text" id="login-email" placeholder="john@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required />
+          </div>
+
+          <button type="submit" id="login-btn">Sign In</button>
+        </form>
+
+        <div class="toggle-text">
+          Don't have account? <span class="toggle-link" onclick="switchForm('signup')">Create Account</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/api';
+    let otpEmail = '';
+    let otpTimer = null;
+
+    function switchForm(form) {
+      document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+      document.getElementById(form + '-section').classList.add('active');
+      clearAlerts();
+    }
+
+    function clearAlerts() {
+      document.querySelectorAll('.alert').forEach(el => {
+        el.classList.remove('show');
+        el.textContent = '';
+      });
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.remove('success');
+      el.classList.add('error', 'show');
+    }
+
+    function showSuccess(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.remove('error');
+      el.classList.add('success', 'show');
+    }
+
+    // SIGNUP
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlerts();
+
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const username = document.getElementById('signup-username').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+      if (!name || !email || !username || !password || !confirmPassword) {
+        showError('signup-error', 'Please fill all fields');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showError('signup-error', 'Passwords do not match');
+        return;
+      }
+
+      const btn = document.getElementById('signup-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Creating...';
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, username, password, confirmPassword })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError('signup-error', data.message || 'Signup failed');
+          return;
+        }
+
+        otpEmail = email;
+        showSuccess('signup-success', '✓ Check email for OTP');
+        setTimeout(() => {
+          document.getElementById('otp-email-display').textContent = `Code sent to ${email}`;
+          switchForm('otp');
+          startOTPTimer();
+        }, 1500);
+      } catch (error) {
+        showError('signup-error', 'Network error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    });
+
+    // OTP VERIFY
+    document.getElementById('otp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlerts();
+
+      const otp = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value).join('');
+
+      if (otp.length !== 6) {
+        showError('otp-error', 'Enter 6-digit code');
+        return;
+      }
+
+      const btn = document.getElementById('verify-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Verifying...';
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: otpEmail, otp })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError('otp-error', data.message || 'Verification failed');
+          return;
+        }
+
+        localStorage.setItem('token', data.token);
+        showSuccess('otp-success', '✓ Email verified!');
+        setTimeout(() => {
+          window.location.href = '/courses.html';
+        }, 1500);
+      } catch (error) {
+        showError('otp-error', 'Network error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Verify OTP';
+      }
+    });
+
+    // RESEND OTP
+    async function resendOTP() {
+      const btn = document.getElementById('resend-btn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: otpEmail })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showError('otp-error', data.message);
+          return;
+        }
+
+        showSuccess('otp-success', '✓ New code sent');
+        clearInterval(otpTimer);
+        document.getElementById('otp-timer').classList.remove('warning');
+        startOTPTimer();
+        document.querySelectorAll('.otp-input').forEach(i => i.value = '');
+      } catch (error) {
+        showError('otp-error', 'Error sending code');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // LOGIN
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlerts();
+
+      const emailOrUsername = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!emailOrUsername || !password) {
+        showError('login-error', 'Fill all fields');
+        return;
+      }
+
+      const btn = document.getElementById('login-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Signing in...';
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ emailOrUsername, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          if (data.requiresOTP) {
+            showError('login-error', 'Verify email first');
+            otpEmail = data.email;
+            setTimeout(() => switchForm('otp'), 1500);
+            return;
+          }
+          showError('login-error', data.message || 'Login failed');
+          return;
+        }
+
+        localStorage.setItem('token', data.token);
+        showSuccess('login-success', '✓ Success!');
+        setTimeout(() => {
+          window.location.href = '/courses.html';
+        }, 1500);
+      } catch (error) {
+        showError('login-error', 'Network error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    });
+
+    // OTP TIMER
+    function startOTPTimer() {
+      let seconds = 600;
+      otpTimer = setInterval(() => {
+        seconds--;
+        document.getElementById('timer').textContent = seconds;
+        if (seconds < 60) document.getElementById('otp-timer').classList.add('warning');
+        if (seconds <= 0) {
+          clearInterval(otpTimer);
+          document.getElementById('verify-btn').disabled = true;
+        }
+      }, 1000);
+    }
+
+    // OTP AUTO FOCUS
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach((input, i) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value && i < inputs.length - 1) inputs[i + 1].focus();
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && i > 0) inputs[i - 1].focus();
+      });
+    });
+  </script>
+</body>
+</html>

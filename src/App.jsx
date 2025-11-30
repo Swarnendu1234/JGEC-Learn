@@ -188,6 +188,7 @@ function App() {
                     coursesData={courses}
                     notifications={notifications}
                     messages={messages}
+                    showToast={showToast}
                 />                <div className="page-content">
                     <PageHeader />
 

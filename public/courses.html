@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Courses - JGEC Learn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f9fbff 0%, #f4f6ff 40%, #f7f7ff 100%);
+      min-height: 100vh;
+      color: #111827;
+    }
+
+    .navbar {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2563eb 0%, #6366f1 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-greeting {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .user-greeting strong {
+      color: #111827;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .header {
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .header p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .course-image {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+    }
+
+    .course-content {
+      padding: 20px;
+    }
+
+    .course-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #e0ecff;
+      color: #2563eb;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .course-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .course-description {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .course-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%);
+      width: 0;
+      border-radius: 3px;
+    }
+
+    .course-footer {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 24px;
+      color: #6b7280;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: #6b7280;
+    }
+
+    .empty-state h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .courses-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 24px 16px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="logo">JGEC Learn</div>
+    <div class="nav-right">
+      <div class="user-greeting">
+        Welcome, <strong id="username">User</strong>! 👋
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <div class="header">
+      <h1>Your Courses</h1>
+      <p>Continue learning and unlock your potential</p>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div class="loading" id="loading-state" style="display: none;">
+      <div class="spinner"></div>
+      <p>Loading your courses...</p>
+    </div>
+
+    <!-- COURSES GRID -->
+    <div class="courses-grid" id="courses-container">
+      <!-- Courses will be loaded here -->
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <h2>No courses yet</h2>
+      <p>Explore our course catalog to get started!</p>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/api';
+
+    // CHECK AUTHENTICATION ON PAGE LOAD
+    window.addEventListener('load', async () => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        // No token, redirect to auth
+        window.location.href = '/auth_page.html';
+        return;
+      }
+
+      // Verify token with server
+      try {
+        const res = await fetch(`${API_BASE}/auth/me`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!res.ok) {
+          // Token invalid, redirect to auth
+          localStorage.removeItem('token');
+          window.location.href = '/auth_page.html';
+          return;
+        }
+
+        const data = await res.json();
+        if (data.success && data.user) {
+          // Token valid, user authenticated
+          document.getElementById('username').textContent = data.user.name || data.user.username;
+          loadCourses();
+        } else {
+          // Auth failed
+          localStorage.removeItem('token');
+          window.location.href = '/auth_page.html';
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('token');
+        window.location.href = '/auth_page.html';
+      }
+    });
+
+    // LOAD COURSES
+    async function loadCourses() {
+      const loading = document.getElementById('loading-state');
+      const container = document.getElementById('courses-container');
+      const empty = document.getElementById('empty-state');
+      const token = localStorage.getItem('token');
+
+      loading.style.display = 'block';
+
+      try {
+        const res = await fetch(`${API_BASE}/courses`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const data = await res.json();
+        loading.style.display = 'none';
+
+        if (!res.ok || !Array.isArray(data)) {
+          // No courses found
+          empty.style.display = 'block';
+          container.innerHTML = '';
+          return;
+        }
+
+        if (data.length === 0) {
+          empty.style.display = 'block';
+          container.innerHTML = '';
+          return;
+        }
+
+        // Render courses
+        container.innerHTML = data.map(course => `
+          <div class="course-card">
+            <div class="course-image">
+              ${getEmoji(course.badge)}
+            </div>
+            <div class="course-content">
+              <div class="course-badge">${course.badge}</div>
+              <div class="course-title">${course.title}</div>
+              <div class="course-description">${course.description || 'Master this course'}</div>
+              
+              <div class="course-meta">
+                <span>⭐ ${course.rating || '4.5'}</span>
+                <span>👥 ${course.enrolled || '0'} enrolled</span>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${course.progress || 0}%"></div>
+              </div>
+
+              <div class="course-footer">
+                <button class="btn btn-primary" onclick="viewCourse('${course._id}')">
+                  ${course.progress ? 'Continue' : 'Start'}
+                </button>
+                <button class="btn btn-secondary" onclick="alert('Coming soon!')">More</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        empty.style.display = 'none';
+      } catch (error) {
+        console.error('Error loading courses:', error);
+        loading.style.display = 'none';
+        empty.style.display = 'block';
+      }
+    }
+
+    // HELPER FUNCTION
+    function getEmoji(badge) {
+      const emojis = {
+        'Harvard': '🎓',
+        'MIT': '🚀',
+        'Stanford': '💻',
+        'Yale': '📚',
+        'IBM': '🤖',
+        'Google': '🔍'
+      };
+      return emojis[badge] || '📖';
+    }
+
+    function viewCourse(courseId) {
+      alert(`Viewing course: ${courseId}\n\nCourse detail page coming soon!`);
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        window.location.href = '/auth_page.html';
+      }
+    }
+
+    // PREVENT BACK BUTTON TO AUTH PAGE
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        // Page was restored from back/forward cache
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/auth_page.html';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

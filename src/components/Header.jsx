@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import SearchBar from './SearchBar'
 import NotificationPanel from './NotificationPanel'
 import MessagesPanel from './MessagesPanel'
 
-const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notifications, messages }) => {
+const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notifications, messages, showToast }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false)
+    const { user, logout } = useAuth()
     const {
         notifications: notificationList,
         unreadCount: notifUnreadCount,
@@ -94,7 +96,7 @@ const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notific
 
                 <div style={{ position: 'relative' }}>
                     <img 
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" 
+                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'User'}`} 
                         alt="Profile" 
                         className="profile-avatar"
                         onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -104,12 +106,12 @@ const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notific
                         <div className="profile-dropdown">
                             <div className="profile-dropdown-header">
                                 <img 
-                                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" 
+                                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'User'}`} 
                                     alt="Profile" 
                                     style={{ width: '48px', height: '48px', borderRadius: '50%' }}
                                 />
                                 <div>
-                                    <div style={{ fontWeight: '700', fontSize: '15px', color: 'var(--text-primary)' }}>Nirman Khatri</div>
+                                    <div style={{ fontWeight: '700', fontSize: '15px', color: 'var(--text-primary)' }}>{user?.name || 'User'}</div>
                                     <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Student</div>
                                 </div>
                             </div>
@@ -129,9 +131,8 @@ const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notific
                             
                             <button className="profile-dropdown-item logout" onClick={() => {
                                 setIsProfileOpen(false)
-                                if (confirm('Are you sure you want to logout?')) {
-                                    window.location.reload()
-                                }
+                                showToast('👋 Logged out successfully', 'success')
+                                setTimeout(() => logout(), 1000)
                             }}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

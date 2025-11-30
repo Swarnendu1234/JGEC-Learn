@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { connectDB, disconnectDB } from './db.js';
 import { Course } from './models/Course.js';
+import { verifyToken } from './middleware/auth.js';
 import courseDetailsRouter from './routes/courseDetails.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -30,6 +31,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Serve static files from public folder
+app.use(express.static(path.join(__dirname, '../public')));
+
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`📥 ${req.method} ${req.path}`);
@@ -47,8 +51,14 @@ app.use((err, req, res, next) => {
 
 console.log('\n🚀 Server starting...');
 
-// Mount course details routes
+// Root route - serve auth page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/auth_page.html'));
+});
+
+// Mount routes
 app.use('/api', courseDetailsRouter);
+app.use('/api/auth', (await import('./routes/auth.js')).default);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -61,7 +71,8 @@ app.get('/api/health', (req, res) => {
 });
 
 // GET all courses
-app.get('/api/courses', async (req, res) => {
+// GET all courses (Protected - requires authentication)
+app.get('/api/courses', verifyToken, async (req, res) => {
   try {
     const courses = await Course.find().sort({ id: 1 });
     res.json(courses);
@@ -187,6 +198,11 @@ async function startServer() {
       }
       process.exit(1);
     });
+
+    // Keep process alive
+    if (process.stdin.isTTY) {
+      process.stdin.pause();
+    }
 
     // Graceful shutdown
     let shutdownInProgress = false;

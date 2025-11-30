@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://jgec-learn-backend.vercel.app/api' : '/api');
+const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://jgec-learn-backend.vercel.app' : '/api');
 
 // Helper function to handle API errors
 const handleApiError = (error, endpoint) => {

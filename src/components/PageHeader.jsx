@@ -2,7 +2,7 @@ const PageHeader = () => {
     return (
         <div className="page-header">
             <div className="header-text">
-                <h1>My Courses</h1>
+                <h1>Your Courses</h1>
                 <p>Continue your learning journey · 8 courses in progress</p>
             </div>
 

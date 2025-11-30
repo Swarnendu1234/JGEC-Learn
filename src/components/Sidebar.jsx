@@ -1,4 +1,7 @@
+import { useAuth } from '../context/AuthContext'
+
 const Sidebar = ({ isOpen, onClose }) => {
+    const { user } = useAuth()
     const navLinks = [
         {
             name: 'My Courses',
@@ -82,9 +85,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </nav>
 
                 <div className="sidebar-user">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" alt="User" />
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'User'}`} alt="User" />
                     <div className="user-info">
-                        <div className="user-name">Nirman Kumar</div>
+                        <div className="user-name">{user?.name || 'User'}</div>
                         <div className="user-role">Premium Student</div>
                     </div>
                 </div>

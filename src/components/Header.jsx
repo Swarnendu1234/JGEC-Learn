@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import SearchBar from './SearchBar'
 import NotificationPanel from './NotificationPanel'
@@ -6,6 +7,7 @@ import MessagesPanel from './MessagesPanel'
 
 const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notifications, messages, showToast }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false)
+    const navigate = useNavigate()
     const { user, logout } = useAuth()
     const {
         notifications: notificationList,
@@ -132,7 +134,8 @@ const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notific
                             <button className="profile-dropdown-item logout" onClick={() => {
                                 setIsProfileOpen(false)
                                 showToast('👋 Logged out successfully', 'success')
-                                setTimeout(() => logout(), 1000)
+                                logout()
+                                setTimeout(() => navigate('/login'), 1000)
                             }}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

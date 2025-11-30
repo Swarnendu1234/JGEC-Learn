@@ -18,10 +18,12 @@ const handleApiError = (error, endpoint) => {
 export const fetchCourses = async () => {
   try {
     console.log('📡 Fetching courses from:', `${API_BASE}/courses`);
+    const token = localStorage.getItem('token');
     const response = await fetch(`${API_BASE}/courses`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
       }
     });
     

@@ -31,9 +31,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Serve static files from public folder
-app.use(express.static(path.join(__dirname, '../public')));
-
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`📥 ${req.method} ${req.path}`);
@@ -50,11 +47,6 @@ app.use((err, req, res, next) => {
 });
 
 console.log('\n🚀 Server starting...');
-
-// Root route - serve auth page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/auth_page.html'));
-});
 
 // Mount routes
 app.use('/api', courseDetailsRouter);

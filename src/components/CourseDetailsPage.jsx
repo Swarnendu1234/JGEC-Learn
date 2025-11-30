@@ -5,9 +5,34 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
     const [expandedModule, setExpandedModule] = useState(null)
     const [showPaymentModal, setShowPaymentModal] = useState(false)
 
+    // Provide default values for missing course properties
+    const courseData = {
+        ...course,
+        bannerImage: course?.bannerImage || course?.image || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97',
+        about: course?.about || 'This is a comprehensive course designed to help you master the fundamentals and advanced concepts.',
+        learningOutcomes: course?.learningOutcomes || [
+            'Understand core concepts and principles',
+            'Apply knowledge to practical projects',
+            'Build portfolio-worthy projects',
+            'Get certified upon completion'
+        ],
+        syllabus: course?.syllabus || [
+            { id: 1, title: 'Introduction', lectures: 5, duration: '2 hours', completed: false, topics: ['Overview', 'Setup', 'Basics'] },
+            { id: 2, title: 'Fundamentals', lectures: 8, duration: '4 hours', completed: false, topics: ['Concepts', 'Practice', 'Exercises'] },
+            { id: 3, title: 'Advanced Topics', lectures: 10, duration: '5 hours', completed: false, topics: ['Advanced Concepts', 'Projects', 'Optimization'] }
+        ],
+        instructors: course?.instructors || [
+            { name: 'Expert Instructor', title: 'Course Instructor', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d' }
+        ],
+        resources: course?.resources || [
+            { name: 'Course Materials', size: '2.4 MB', type: 'pdf' },
+            { name: 'Lecture Slides', size: '1.2 MB', type: 'pdf' }
+        ]
+    }
+
     const toggleModule = (moduleId) => {
         // Check if course access is expired or locked
-        if (course.status === 'expired' || course.isPaid) {
+        if (courseData.status === 'expired' || courseData.isPaid) {
             showToast('Full access requires payment. Please upgrade to continue. / সম্পূর্ণ অ্যাক্সেসের জন্য পেমেন্ট প্রয়োজন। অনুগ্রহ করে আপগ্রেড করুন।', 'warning')
             setShowPaymentModal(true)
             return
@@ -16,12 +41,12 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
     }
 
     const handleResumeCourse = () => {
-        if (course.status === 'expired' || course.isPaid) {
+        if (courseData.status === 'expired' || courseData.isPaid) {
             showToast('This is a premium course. Upgrade to access all content. / এটি একটি প্রিমিয়াম কোর্স। সমস্ত কন্টেন্ট অ্যাক্সেস করতে আপগ্রেড করুন।', 'warning')
             setShowPaymentModal(true)
             return
         }
-        showToast(`Resuming ${course.title}...`, 'success')
+        showToast(`Resuming ${courseData.title}...`, 'success')
         // Navigate to course player
     }
 
@@ -32,14 +57,14 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
     }
 
     const handleViewCourse = () => {
-        if (course.status === 'expired' || course.isPaid) {
+        if (courseData.status === 'expired' || courseData.isPaid) {
             showToast('Full access requires payment to unlock all modules / সমস্ত মডিউল আনলক করতে পেমেন্ট প্রয়োজন', 'warning')
         }
         // Navigate to course viewer with limited access
     }
 
     const handleDownloadResource = (resource) => {
-        if (course.status === 'expired' || course.isPaid) {
+        if (courseData.status === 'expired' || courseData.isPaid) {
             showToast('Upgrade to download resources / রিসোর্স ডাউনলোড করতে আপগ্রেড করুন', 'warning')
             setShowPaymentModal(true)
             return
@@ -51,7 +76,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
         <>
             {showPaymentModal && (
                 <PaymentModal
-                    course={course}
+                    course={courseData}
                     onClose={() => setShowPaymentModal(false)}
                     showToast={showToast}
                 />
@@ -78,17 +103,17 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
 
                     {/* Banner Section */}
                     <div className="course-banner-premium">
-                        <img src={course.bannerImage} alt={course.title} />
+                        <img src={courseData.bannerImage} alt={courseData.title} />
 
                         {/* University Badge */}
                         <div className="university-badge-premium">
-                            <div className="badge-logo">{course.badge}</div>
+                            <div className="badge-logo">{courseData.badge}</div>
                         </div>
 
                         {/* Access Status Tag */}
-                        {(course.status === 'expired' || course.isPaid) && (
-                            <div className={`access-status-tag ${course.status === 'expired' ? 'expired' : 'paid'}`}>
-                                {course.status === 'expired' ? (
+                        {(courseData.status === 'expired' || courseData.isPaid) && (
+                            <div className={`access-status-tag ${courseData.status === 'expired' ? 'expired' : 'paid'}`}>
+                                {courseData.status === 'expired' ? (
                                     <>
                                         <svg viewBox="0 0 24 24" fill="currentColor">
                                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
@@ -108,7 +133,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
 
                         <div className="course-banner-overlay-premium">
                             <div className="course-banner-content-premium">
-                                <h1 className="course-title-premium">{course.title}</h1>
+                                <h1 className="course-title-premium">{courseData.title}</h1>
 
                                 <div className="course-meta-row">
                                     <div className="meta-item-premium">
@@ -118,20 +143,20 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                                             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                         </svg>
-                                        <span>{course.enrolled} enrolled</span>
+                                        <span>{courseData.enrolled} enrolled</span>
                                     </div>
                                     <div className="meta-item-premium">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <circle cx="12" cy="12" r="10" />
                                             <polyline points="12 6 12 12 16 14" />
                                         </svg>
-                                        <span>{course.duration}</span>
+                                        <span>{courseData.duration}</span>
                                     </div>
                                     <div className="meta-item-premium rating-premium">
                                         <svg viewBox="0 0 24 24" fill="currentColor">
                                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                         </svg>
-                                        <span>{course.rating}</span>
+                                        <span>{courseData.rating}</span>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +171,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                             <div className="course-progress-card-premium">
                                 <div className="progress-header">
                                     <h3>Course Progress / কোর্স অগ্রগতি</h3>
-                                    {(course.status === 'expired' || course.isPaid) && (
+                                    {(courseData.status === 'expired' || courseData.isPaid) && (
                                         <div className="lock-indicator">
                                             <svg viewBox="0 0 24 24" fill="currentColor">
                                                 <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
@@ -164,15 +189,15 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                                                 cy="60"
                                                 r="54"
                                                 className="progress-fill-premium"
-                                                strokeDasharray={`${course.progress * 3.39} 339`}
+                                                strokeDasharray={`${courseData.progress * 3.39} 339`}
                                             />
                                             <text x="60" y="60" className="progress-text-premium">
-                                                <tspan x="60" dy="8">{course.progress}%</tspan>
+                                                <tspan x="60" dy="8">{courseData.progress}%</tspan>
                                             </text>
                                         </svg>
                                     </div>
                                     <div className="progress-stats-premium">
-                                        <p className="modules-completed">{course.modules.completed}/{course.modules.total} modules completed / মডিউল সম্পন্ন</p>
+                                        <p className="modules-completed">{courseData.modules.completed}/{courseData.modules.total} modules completed / মডিউল সম্পন্ন</p>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +206,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                             <div className="tags-card-premium">
                                 <h3>Course Topics / কোর্স বিষয়</h3>
                                 <div className="tags-wrapper">
-                                    {course.tags.map((tag, index) => (
+                                    {courseData.tags.map((tag, index) => (
                                         <span key={index} className="tag-pill-premium">
                                             {tag}
                                         </span>
@@ -209,7 +234,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                             {/* Instructors Card */}
                             <div className="instructors-card">
                                 <h3>Instructors</h3>
-                                {course.instructors.map((instructor, index) => (
+                                {courseData.instructors.map((instructor, index) => (
                                     <div key={index} className="instructor-item">
                                         <img src={instructor.image} alt={instructor.name} />
                                         <div className="instructor-info">
@@ -229,7 +254,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                                     Download Resources
                                 </h3>
                                 <div className="resources-list">
-                                    {course.resources.map((resource, index) => (
+                                    {courseData.resources.map((resource, index) => (
                                         <div
                                             key={index}
                                             className="resource-item"
@@ -266,14 +291,14 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                             {/* About Section */}
                             <section className="content-section">
                                 <h2>About This Course</h2>
-                                <p className="course-description">{course.about}</p>
+                                <p className="course-description">{courseData.about}</p>
                             </section>
 
                             {/* Learning Outcomes */}
                             <section className="content-section">
                                 <h2>What You Will Learn</h2>
                                 <div className="learning-outcomes">
-                                    {course.learningOutcomes.map((outcome, index) => (
+                                    {courseData.learningOutcomes.map((outcome, index) => (
                                         <div key={index} className="outcome-item">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                                 <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -288,7 +313,7 @@ const CourseDetailsPage = ({ course, onClose, showToast }) => {
                             <section className="content-section">
                                 <h2>Course Syllabus</h2>
                                 <div className="syllabus-container">
-                                    {course.syllabus.map((module) => (
+                                    {courseData.syllabus.map((module) => (
                                         <div
                                             key={module.id}
                                             className={`syllabus-module ${module.completed ? 'completed' : ''} ${expandedModule === module.id ? 'expanded' : ''}`}

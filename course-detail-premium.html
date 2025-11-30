@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to Computer Science - Premium Course</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #818CF8;
+      --accent: #06B6D4;
+      --gold: #F59E0B;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.03);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--primary-light);
+    }
+
+    .course-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .course-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .university-badge {
+      background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    .progress-container {
+      position: relative;
+      height: 4px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 999px;
+      width: 45%;
+      position: relative;
+      transition: width 0.5s ease;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .progress-text {
+      font-size: 0.75rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    /* Main Layout */
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: 2rem;
+    }
+
+    /* Left Sidebar */
+    .sidebar-left {
+      position: sticky;
+      top: 140px;
+      height: fit-content;
+    }
+
+    .sidebar-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .completion-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .module-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .module-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .module-item:hover {
+      background: var(--bg);
+    }
+
+    .module-item.completed {
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .module-item.active {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .module-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      background: var(--bg);
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .module-item.completed .module-number {
+      background: var(--success);
+      color: white;
+    }
+
+    .module-item.active .module-number {
+      background: var(--primary);
+      color: white;
+    }
+
+    .module-info {
+      flex: 1;
+    }
+
+    .module-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .module-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+    }
+
+    .module-item.locked .module-icon {
+      color: var(--gold);
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5));
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .video-card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .lesson-content {
+      padding: 2rem;
+    }
+
+    .lesson-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .lesson-intro {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .learning-outcomes {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .outcomes-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .outcomes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .outcome-item {
+      display: flex;
+      align-items: start;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text);
+    }
+
+    .outcome-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      color: var(--primary);
+    }
+
+    .tab.active {
+      color: var(--primary);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    }
+
+    .tab-content {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.8;
+    }
+
+    /* Right Sidebar */
+    .sidebar-right {
+      position: sticky;
+      top: 140px;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .instructor-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .instructor-header {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .instructor-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      border: 3px solid var(--primary);
+      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2);
+    }
+
+    .instructor-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .instructor-title {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .instructor-achievements {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .achievement-badge {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--gold) 0%, #F97316 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .course-info-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .info-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .metric-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+
+    .metric-value {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--primary);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+
+    @media (max-width: 1400px) {
+      .container {
+        grid-template-columns: 260px 1fr 300px;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar-left,
+      .sidebar-right {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="breadcrumb">
+      <a href="#">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Courses
+      </a>
+      <span>→</span>
+      <span>Introduction to Computer Science</span>
+    </div>
+    
+    <div class="course-header">
+      <h1 class="course-title">Introduction to Computer Science</h1>
+      <span class="university-badge">MIT</span>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="progress-text">45% Complete</div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Left Sidebar: Course Content -->
+    <aside class="sidebar-left">
+      <div class="sidebar-card">
+        <div class="sidebar-header">
+          <h2 class="sidebar-title">Course Content</h2>
+          <span class="completion-badge">3/8</span>
+        </div>
+        
+        <div class="module-list">
+          <div class="module-item completed">
+            <div class="module-number">✓</div>
+            <div class="module-info">
+              <div class="module-name">Introduction to Programming</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+
+          <div class="module-item completed">
+            <div class="module-number">✓</div>
+            <div class="module-info">
+              <div class="module-name">Data Structures</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+
+          <div class="module-item completed">
+            <div class="module-number">✓</div>
+            <div class="module-info">
+              <div class="module-name">Algorithms Basics</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+
+          <div class="module-item active">
+            <div class="module-number">4</div>
+            <div class="module-info">
+              <div class="module-name">Object-Oriented Programming</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+
+          <div class="module-item locked">
+            <div class="module-number">5</div>
+            <div class="module-info">
+              <div class="module-name">Advanced Algorithms</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 1a5 5 0 00-5 5v2H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V10a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm0 2a3 3 0 013 3v2H9V6a3 3 0 013-3z"/>
+            </svg>
+          </div>
+
+          <div class="module-item">
+            <div class="module-number">6</div>
+            <div class="module-info">
+              <div class="module-name">Database Systems</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+
+          <div class="module-item">
+            <div class="module-number">7</div>
+            <div class="module-info">
+              <div class="module-name">Web Development</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+
+          <div class="module-item">
+            <div class="module-number">8</div>
+            <div class="module-info">
+              <div class="module-name">Final Project</div>
+            </div>
+            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content: Video & Lesson Details -->
+    <main class="main-content">
+      <div class="video-card">
+        <div class="video-container">
+          <iframe 
+            src="https://www.youtube.com/embed/Yw6u6YkTgQ4" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+        
+        <div class="lesson-content">
+          <h2 class="lesson-title">Object-Oriented Programming</h2>
+          
+          <p class="lesson-intro">
+            Learn the fundamental concepts of Object-Oriented Programming (OOP) including encapsulation, 
+            inheritance, polymorphism, and abstraction. This lesson will help you understand how to design 
+            and structure code using classes and objects.
+          </p>
+
+          <div class="learning-outcomes">
+            <div class="outcomes-title">
+              <svg class="outcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Key Learning Outcomes
+            </div>
+            <div class="outcomes-list">
+              <div class="outcome-item">
+                <svg class="outcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Understand the four pillars of OOP: Encapsulation, Inheritance, Polymorphism, and Abstraction</span>
+              </div>
+              <div class="outcome-item">
+                <svg class="outcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Design and implement classes with proper structure and relationships</span>
+              </div>
+              <div class="outcome-item">
+                <svg class="outcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Apply OOP principles to solve real-world programming problems</span>
+              </div>
+              <div class="outcome-item">
+                <svg class="outcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Write clean, maintainable, and reusable code using OOP best practices</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active">Overview</button>
+            <button class="tab">Notes</button>
+            <button class="tab">Resources</button>
+            <button class="tab">Discussions</button>
+          </div>
+
+          <div class="tab-content">
+            <p>
+              Object-Oriented Programming is a programming paradigm that organizes software design around 
+              data, or objects, rather than functions and logic. An object can be defined as a data field 
+              that has unique attributes and behavior. This approach to programming is well-suited for 
+              programs that are large, complex, and actively updated or maintained.
+            </p>
+            <br>
+            <p>
+              In this comprehensive lesson, you'll explore how OOP helps in creating modular, flexible, 
+              and maintainable code. We'll dive deep into practical examples and build real-world applications 
+              that demonstrate the power of object-oriented design patterns.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar: Instructor & Course Info -->
+    <aside class="sidebar-right">
+      
+      <!-- Instructor Card -->
+      <div class="instructor-card">
+        <h3 class="instructor-header">Instructor</h3>
+        <img 
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop" 
+          alt="Dr. John Smith" 
+          class="instructor-avatar"
+        >
+        <h4 class="instructor-name">Dr. John Smith</h4>
+        <p class="instructor-title">Professor of Computer Science, MIT</p>
+        
+        <div class="instructor-achievements">
+          <div class="achievement-badge">🏆</div>
+          <div class="achievement-badge">⭐</div>
+          <div class="achievement-badge">🎓</div>
+        </div>
+      </div>
+
+      <!-- Course Info Card -->
+      <div class="course-info-card">
+        <h3 class="info-title">Course Info</h3>
+        
+        <div class="info-metrics">
+          <div class="metric-item">
+            <svg class="metric-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span><span class="metric-value">4.8</span> rating</span>
+          </div>
+          
+          <div class="metric-item">
+            <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+            <span><span class="metric-value">2,345</span> learners</span>
+          </div>
+          
+          <div class="metric-item">
+            <svg class="metric-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span><span class="metric-value">4 weeks</span> duration</span>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Computer Science</span>
+          <span class="tag">Programming</span>
+          <span class="tag">Algorithms</span>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+</body>
+</html>

@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import SearchBar from './SearchBar'
 import NotificationPanel from './NotificationPanel'
 import MessagesPanel from './MessagesPanel'
 
 const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notifications, messages }) => {
+    const [isProfileOpen, setIsProfileOpen] = useState(false)
     const {
         notifications: notificationList,
         unreadCount: notifUnreadCount,
@@ -90,7 +92,57 @@ const Header = ({ searchQuery, setSearchQuery, onMenuClick, coursesData, notific
                     unreadCount={messagesUnreadCount}
                 />
 
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" alt="Profile" className="profile-avatar" />
+                <div style={{ position: 'relative' }}>
+                    <img 
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" 
+                        alt="Profile" 
+                        className="profile-avatar"
+                        onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    />
+                    
+                    {isProfileOpen && (
+                        <div className="profile-dropdown">
+                            <div className="profile-dropdown-header">
+                                <img 
+                                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nirman" 
+                                    alt="Profile" 
+                                    style={{ width: '48px', height: '48px', borderRadius: '50%' }}
+                                />
+                                <div>
+                                    <div style={{ fontWeight: '700', fontSize: '15px', color: 'var(--text-primary)' }}>Nirman Khatri</div>
+                                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Student</div>
+                                </div>
+                            </div>
+                            
+                            <div className="profile-dropdown-divider"></div>
+                            
+                            <button className="profile-dropdown-item" onClick={() => {
+                                setIsProfileOpen(false)
+                                alert('Profile page coming soon!')
+                            }}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                                <span>Profile</span>
+                            </button>
+                            
+                            <button className="profile-dropdown-item logout" onClick={() => {
+                                setIsProfileOpen(false)
+                                if (confirm('Are you sure you want to logout?')) {
+                                    window.location.reload()
+                                }
+                            }}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )

@@ -60,9 +60,7 @@ const CourseCard = ({ course, onContinue, onViewCertificate, onCardClick }) => {
                     </div>
                 )}
                 <div className="card-overlay">
-                    <button className="quick-action" onClick={handlePrimaryAction}>
-                        {course.status === 'completed' ? 'View Certificate' : 'Continue Learning'}
-                    </button>
+                    
                 </div>
             </div>
 
@@ -156,14 +154,7 @@ const CourseCard = ({ course, onContinue, onViewCertificate, onCardClick }) => {
                             </button>
                             <button className="btn-primary" onClick={() => onContinue(course.title)}>Review Course</button>
                         </>
-                    ) : (
-                        <button className="btn-primary full-width" onClick={handlePrimaryAction}>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polygon points="5 3 19 12 5 21 5 3" />
-                            </svg>
-                            Continue Learning
-                        </button>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </div>

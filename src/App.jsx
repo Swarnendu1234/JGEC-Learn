@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { fetchCourses } from './services/api'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
+import CourseLearningPage from './components/CourseLearningPage'
 import PageHeader from './components/PageHeader'
 import FilterChips from './components/FilterChips'
 import StreakBanner from './components/StreakBanner'
@@ -33,20 +34,38 @@ function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [showConfetti, setShowConfetti] = useState(false)
     const [selectedCourse, setSelectedCourse] = useState(null)
+    const [learningCourseId, setLearningCourseId] = useState(null)
     const [isChatbotOpen, setIsChatbotOpen] = useState(false)
     const [courses, setCourses] = useState([])
 
-    // Load courses from MongoDB
+    // Load courses from API or use fallback
     useEffect(() => {
         const loadCourses = async () => {
             try {
+                console.log('📚 Loading courses from API...');
                 const data = await fetchCourses();
-                setCourses(data && Array.isArray(data) ? data : coursesData);
+                
+                if (!data) {
+                    throw new Error('No data received from API');
+                }
+                
+                if (!Array.isArray(data)) {
+                    console.warn('⚠️ API response is not an array, using fallback data');
+                    setCourses(coursesData);
+                    showToast('Using offline data', 'warning');
+                    return;
+                }
+                
+                console.log('✅ Courses loaded from API:', data.length);
+                setCourses(data);
             } catch (error) {
-                console.error('Error loading courses:', error);
+                console.error('❌ Error loading courses:', error.message);
+                console.log('📦 Falling back to local data...');
                 setCourses(coursesData);
+                showToast('Using offline data - Backend may not be running', 'warning');
             }
         };
+        
         loadCourses();
     }, []);
 
@@ -126,11 +145,8 @@ function App() {
         }
     })
 
-    const handleContinueCourse = (courseTitle) => {
-        showToast(`Launching ${courseTitle}...`, 'info')
-        setTimeout(() => {
-            showToast('Course loaded! 🚀', 'success')
-        }, 1500)
+    const handleContinueCourse = (courseId) => {
+        setLearningCourseId(courseId)
     }
 
     const handleViewCertificate = (courseTitle) => {
@@ -202,7 +218,7 @@ function App() {
                             <CourseCard
                                 key={course.id}
                                 course={course}
-                                onContinue={handleContinueCourse}
+                                onContinue={() => handleContinueCourse(course.id)}
                                 onViewCertificate={handleViewCertificate}
                                 onCardClick={setSelectedCourse}
                             />
@@ -250,6 +266,14 @@ function App() {
             </main>
 
             <RightSidebar showToast={showToast} />
+
+            {learningCourseId && (
+                <CourseLearningPage
+                    courseId={learningCourseId}
+                    onClose={() => setLearningCourseId(null)}
+                    showToast={showToast}
+                />
+            )}
 
             {selectedCourse && (
                 <CourseDetailsPage

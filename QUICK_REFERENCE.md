@@ -1,23 +1,24 @@
-# Quick Reference Card
+# 🚀 QUICK START GUIDE
 
-## 🚀 Quick Start (5 minutes)
+## ⚡ 30-Second Setup
 
-### Step 1: Install Server (2 min)
-```bash
-cd server
-npm install
+### Windows
+```cmd
+start-all.bat
 ```
 
-### Step 2: Start MongoDB
-Windows: Services app → MongoDB Server → Start  
-Mac: `brew services start mongodb-community`  
-Linux: `sudo systemctl start mongod`
+### PowerShell
+```powershell
+.\start-all.ps1
+```
 
-### Step 3: Terminal 1 - Backend
+### Manual
 ```bash
-cd server
-npm run start
-# Runs on http://localhost:3000
+# Terminal 1
+cd server && node server.js
+
+# Terminal 2
+npm run dev
 ```
 
 ### Step 4: Terminal 2 - Frontend

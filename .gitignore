@@ -1,38 +1,20 @@
 # Dependencies
-node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Build output
-dist/
-build/
+node_modules
+server/node_modules
 
 # Environment variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+server/.env
 
-# Editor directories and files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
+# Build output
+dist
+.vercel
 
 # Logs
-logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+server/*.log
 
-# Testing
-coverage/
-
-# Temporary files
-*.tmp
-.cache/
+# OS
+.DS_Store
+Thumbs.db
